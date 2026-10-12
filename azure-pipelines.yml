@@ -34,7 +34,8 @@ steps:
       backendAzureRmContainerName: 'tfpipeline'
       backendAzureRmKey: 'terraform.state'
 
-  - task: TerraformTask@5
+  - task: TerraformTask@5'
+    displayName: Terraform Plan
     inputs:
       provider: 'azurerm'
       command: 'plan'
