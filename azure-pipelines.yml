@@ -6,14 +6,31 @@
 trigger:
 - main
 
-pool:
-  vmImage: ubuntu-latest
+pool: terraform
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: TerraformTask@5
+  displayName: Terraform Init
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendAzureRmStorageAccountName: 'terraformstate76325'
+    backendAzureRmContainerName: 'tfpipeline'
+    backendAzureRmKey: 'terraform.tfstate'
+
+- task: TerraformTask@5
+  displayName: Terraform Plan
+
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: 'devops-tf'
+
+- task: TerraformTask@5
+  displayName: Terraform Deploy
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: '--auto-approve'
+    environmentServiceNameAzureRM: 'devops-tf'
