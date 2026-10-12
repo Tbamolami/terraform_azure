@@ -1,36 +1,46 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
-pool: terraform
+parameters:
+  - name: environment
+    displayName: Terraform environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - uat
+      - prod
+
+pool:
+  name: terraform
+
+variables:
+  terraformRoot: '$(Build.SourcesDirectory)/terraform'
 
 steps:
-- task: TerraformTask@5
-  displayName: Terraform Init
+  - checkout: self
 
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendAzureRmStorageAccountName: 'terraformstate76325'
-    backendAzureRmContainerName: 'tfpipeline'
-    backendAzureRmKey: 'terraform.tfstate'
+  - task: TerraformTask@5
+    displayName: Terraform Init
+    inputs:
+      provider: azurerm
+      command: init
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      backendServiceArm: 'devops-tf'
+      backendAzureRmStorageAccountName: 'terraformstate76325'
+      backendAzureRmContainerName: 'tfpipeline'
+      backendAzureRmKey: '${{ parameters.environment }}.tfstate'
+      backendAzureRmResourceGroupName: '<YOUR_STATE_RESOURCE_GROUP>'
 
-- task: TerraformTask@5
-  displayName: Terraform Plan
+  - task: TerraformTask@5
+    displayName: Terraform Plan
+    inputs:
+      provider: azurerm
+      command: plan
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      environmentServiceNameAzureRM: 'devops-tf'
 
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'devops-tf'
-
-- task: TerraformTask@5
-  displayName: Terraform Deploy
-  inputs:
-    provider: 'azurerm'
-    command: 'apply'
-    commandOptions: '--auto-approve'
-    environmentServiceNameAzureRM: 'devops-tf'
+  # Apply intentionally omitted during initial validation.
