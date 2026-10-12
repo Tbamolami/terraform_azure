@@ -28,7 +28,7 @@ steps:
     inputs:
       provider: 'azurerm'
       command: 'init'
-      commandOptions: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
       backendServiceArm: 'devops-tf'
       backendAzureRmResourceGroupName: 'rg-devops'
       backendAzureRmStorageAccountName: 'terraformstate76325'
