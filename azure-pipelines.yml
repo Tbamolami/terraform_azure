@@ -24,23 +24,23 @@ steps:
   - checkout: self
 
   - task: TerraformTask@5
-    displayName: Terraform Init
+    displayName: Terraform init
     inputs:
-      provider: azurerm
-      command: init
-      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      provider: 'azurerm'
+      command: 'init'
+      commandOptions: '''$(terraformRoot)/environments/${{ parameters.environment }}'''
       backendServiceArm: 'devops-tf'
       backendAzureRmStorageAccountName: 'terraformstate76325'
       backendAzureRmContainerName: 'tfpipeline'
-      backendAzureRmKey: '${{ parameters.environment }}.tfstate'
-      backendAzureRmResourceGroupName: '<YOUR_STATE_RESOURCE_GROUP>'
+      backendAzureRmKey: 'terraform.state'
 
   - task: TerraformTask@5
-    displayName: Terraform Plan
     inputs:
-      provider: azurerm
-      command: plan
+      provider: 'azurerm'
+      command: 'plan'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      commandOptions: '--auto-approve'
       environmentServiceNameAzureRM: 'devops-tf'
+  
 
   # Apply intentionally omitted during initial validation.
