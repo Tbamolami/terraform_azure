@@ -45,6 +45,7 @@ steps:
       environmentServiceNameAzureRM: 'deploydev-tf'
   
   - task: TerraformTask@5
+    displayName: Terraform apply
     inputs:
       provider: 'azurerm'
       command: 'apply'
