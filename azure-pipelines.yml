@@ -23,14 +23,14 @@ variables:
 steps:
   - checkout: self
 
+
+
   - task: TerraformTask@5
-    displayName: Terraform init
     inputs:
       provider: 'azurerm'
       command: 'init'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
-      environmentServiceNameAzureRM: 'deploydev-tf'
-      backendAzureRmResourceGroupName: 'rg-devops'
+      backendServiceArm: 'deploydev-tf'
       backendAzureRmStorageAccountName: 'terraformstate76325'
       backendAzureRmContainerName: 'tfpipeline'
       backendAzureRmKey: 'terraform.state'
