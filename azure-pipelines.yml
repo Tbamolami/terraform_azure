@@ -45,11 +45,10 @@ steps:
       environmentServiceNameAzureRM: 'deploydev-tf'
   
   - task: TerraformTask@5
-    displayName: Terraform Apply
     inputs:
       provider: 'azurerm'
-      command: 'plan'
+      command: 'apply'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
-      
+      commandOptions: '-auto-approve'
       environmentServiceNameAzureRM: 'deploydev-tf'
   # Apply intentionally omitted during initial validation.
