@@ -50,6 +50,6 @@ steps:
       provider: 'azurerm'
       command: 'plan'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
-      commandOptions: '--auto-approve'
+      commandOptions: '-auto-approve'
       environmentServiceNameAzureRM: 'deploydev-tf'
   # Apply intentionally omitted during initial validation.
