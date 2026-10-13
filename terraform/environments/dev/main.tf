@@ -20,3 +20,6 @@ module "networking" {
   app_subnet_prefix       = ["10.10.1.0/24"]
   management_subnet_prefix = ["10.10.2.0/24"]
 }
+
+
+

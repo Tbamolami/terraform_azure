@@ -18,3 +18,9 @@ output "app_nsg_id" {
   description = "Resource ID of the application network security group."
   value       = azurerm_network_security_group.app.id
 }
+
+
+output "app_nsg_association_id" {
+  description = "ID of the application subnet NSG association."
+  value       = azurerm_subnet_network_security_group_association.app.id
+}
