@@ -42,7 +42,6 @@ steps:
       provider: 'azurerm'
       command: 'plan'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
-      commandOptions: '--auto-approve'
       environmentServiceNameAzureRM: 'devops-tf'
   
 
