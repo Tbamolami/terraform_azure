@@ -35,14 +35,13 @@ steps:
       backendAzureRmContainerName: 'tfpipeline'
       backendAzureRmKey: 'terraform.state'
 
-
   - task: TerraformTask@5
     displayName: Terraform Plan
     inputs:
       provider: 'azurerm'
       command: 'plan'
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
-      environmentServiceNameAzureRM: 'devops-tf'
+      environmentServiceNameAzureRM: 'deploydev-tf'
   
 
   # Apply intentionally omitted during initial validation.
