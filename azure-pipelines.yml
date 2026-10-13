@@ -26,6 +26,7 @@ steps:
 
 
   - task: TerraformTask@5
+    displayName: Terraform init
     inputs:
       provider: 'azurerm'
       command: 'init'
@@ -43,5 +44,12 @@ steps:
       workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
       environmentServiceNameAzureRM: 'deploydev-tf'
   
-
+  - task: TerraformTask@5
+    displayName: Terraform Apply
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      commandOptions: '--auto-approve'
+      environmentServiceNameAzureRM: 'deploydev-tf'
   # Apply intentionally omitted during initial validation.
