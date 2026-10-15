@@ -41,6 +41,9 @@ resource "azurerm_subnet_network_security_group_association" "app" {
   network_security_group_id = azurerm_network_security_group.app.id
 }
 
+data "azurerm_monitor_diagnostic_categories" "app_nsg" {
+  resource_id = azurerm_network_security_group.app.id
+}
 
 resource "azurerm_monitor_diagnostic_setting" "nsg-app-dev" {
   name               = "nsg-app-dev"
