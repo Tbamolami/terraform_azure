@@ -58,8 +58,5 @@ resource "azurerm_monitor_diagnostic_setting" "nsg-app-dev" {
     }
   }
 
-  enabled_metric {
-    category = "AllMetrics"
-  }
 }
 
