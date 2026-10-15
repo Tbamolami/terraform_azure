@@ -12,13 +12,14 @@ resource "azurerm_resource_group" "main" {
 
 module "networking" {
   source = "../../modules/networking"
-
   resource_group_name     = azurerm_resource_group.main.name
   location                = azurerm_resource_group.main.location
   vnet_name               = "vnet-finance-dev"
   vnet_address_space      = ["10.10.0.0/16"]
   app_subnet_prefix       = ["10.10.1.0/24"]
   management_subnet_prefix = ["10.10.2.0/24"]
+  log_analytics_workspace_id = module.monitoring.workspace_id
+
 }
 
 

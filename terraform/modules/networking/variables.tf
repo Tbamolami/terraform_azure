@@ -28,3 +28,9 @@ variable "management_subnet_prefix" {
   description = "Address prefix for the management subnet."
   type        = list(string)
 }
+
+variable "log_analytics_workspace_id" {
+   description = "Address prefix for the management subnet."
+  type        = list(string)
+
+}
