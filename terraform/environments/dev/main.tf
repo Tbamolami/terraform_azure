@@ -23,3 +23,12 @@ module "networking" {
 
 
 
+module "monitoring" {
+  source = "../../modules/monitoring"
+
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  workspace_name      = "law-finance-dev"
+  retention_in_days   = 30
+}
+
