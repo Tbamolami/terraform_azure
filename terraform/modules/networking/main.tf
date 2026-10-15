@@ -48,7 +48,7 @@ data "azurerm_monitor_diagnostic_categories" "app_nsg" {
 resource "azurerm_monitor_diagnostic_setting" "nsg-app-dev" {
   name               = "nsg-app-dev"
   target_resource_id = azurerm_network_security_group.app.id
-  log_analytics_workspace_id = var.log_analytics_workspace.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
 
   dynamic "enabled_log" {
     for_each = data.azurerm_monitor_diagnostic_categories.app_nsg.log_category_types
