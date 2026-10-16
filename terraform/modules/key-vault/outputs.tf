@@ -1,16 +1,17 @@
 output "key_vault_id" {
   description = "Reference the vault in other modules"
-  value       = azurerm_key_vault.main.key_id
+  value       = azurerm_key_vault.main.id
 }
 
 output "key_vault_name" {
   description = "Reference the vault in other modules"
-  value       = azurerm_key_vault.main.key_name
+  value       = azurerm_key_vault.main.name
+
 }
 
 output "key_vault_uri" {
   description = "Reference the vault in other modules"
-  value       = azurerm_key_vault.main.uri
+  value       = azurerm_key_vault.main.vault_uri
 }
 
 
