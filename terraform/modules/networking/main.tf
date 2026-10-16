@@ -59,4 +59,3 @@ resource "azurerm_monitor_diagnostic_setting" "nsg-app-dev" {
   }
 
 }
-

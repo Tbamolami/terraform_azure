@@ -33,3 +33,19 @@ module "monitoring" {
   retention_in_days   = 30
 }
 
+
+module "key-vault" {
+
+  source = "../../modules/key-vault"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  key_vault_name = "kv-finance-dev-76325"
+  tenant_id = data.azurerm_client_config.current.tenant_id
+    tags = {
+    Environment = "dev"
+    Project     = "azure-hybrid-infrastructure"
+    ManagedBy   = "Terraform"
+  }
+
+}
+
