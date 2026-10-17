@@ -11,16 +11,16 @@ resource "azurerm_resource_group" "main" {
 
 
 module "networking" {
-  source = "../../modules/networking"
-  resource_group_name     = azurerm_resource_group.main.name
-  location                = azurerm_resource_group.main.location
+  source              = "../../modules/networking"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
 
-  vnet_name               = "vnet-finance-dev"
-  vnet_address_space      = ["10.10.0.0/16"]
-  app_subnet_prefix       = ["10.10.1.0/24"]
-  management_subnet_prefix = ["10.10.2.0/24"]
+  vnet_name                        = "vnet-finance-dev"
+  vnet_address_space               = ["10.10.0.0/16"]
+  app_subnet_prefix                = ["10.10.1.0/24"]
+  management_subnet_prefix         = ["10.10.2.0/24"]
   database_anagement_subnet_prefix = ["10.10.3.0/24"]
-  log_analytics_workspace_id = module.monitoring.workspace_id
+  log_analytics_workspace_id       = module.monitoring.workspace_id
 
 }
 
@@ -38,12 +38,12 @@ module "monitoring" {
 
 module "key-vault" {
 
-  source = "../../modules/key-vault"
+  source              = "../../modules/key-vault"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  key_vault_name = "kv-finance-dev-76325"
-  tenant_id = data.azurerm_client_config.current.tenant_id
-    tags = {
+  key_vault_name      = "kv-finance-dev-76325"
+  tenant_id           = data.azurerm_client_config.current.tenant_id
+  tags = {
     Environment = "dev"
     Project     = "azure-hybrid-infrastructure"
     ManagedBy   = "Terraform"
@@ -72,3 +72,19 @@ module "database" {
     ManagedBy   = "Terraform"
   }
 }
+
+
+module "container-reg" {
+  source = "../../modules/container-registry"
+
+  registry_name       = "tbamappacr21343"
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  sku                 = "basic"
+  tags = {
+    Environment = "dev"
+    Project     = "azure-hybrid-infrastructure"
+    ManagedBy   = "Terraform"
+  }
+}
+
