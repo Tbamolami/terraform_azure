@@ -80,7 +80,7 @@ module "container-reg" {
   registry_name       = "tbamappacr21343"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  sku                 = "basic"
+  sku                 = "Basic"
   tags = {
     Environment = "dev"
     Project     = "azure-hybrid-infrastructure"
