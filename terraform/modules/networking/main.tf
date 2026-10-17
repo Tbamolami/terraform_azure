@@ -26,6 +26,24 @@ resource "azurerm_subnet" "management" {
   address_prefixes     = var.management_subnet_prefix
 }
 
+resource "azurerm_subnet" "database" {
+  name                 = "snet-database"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = var.database_anagement_subnet_prefix
+  delegation {
+    name ="delegation"
+
+    service_delegation {
+      name = "Microsoft.DBforPostgreSQL/flexibleServers"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+    }
+  }
+}
+
+
 resource "azurerm_network_security_group" "app" {
   name                = "nsg-app-dev"
   location            = var.location

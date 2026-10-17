@@ -34,3 +34,8 @@ variable "log_analytics_workspace_id" {
   type        = string
 
 }
+
+variable "database_anagement_subnet_prefix" {
+  description = "Address prefix for the management subnet."
+  type        = list(string)
+}

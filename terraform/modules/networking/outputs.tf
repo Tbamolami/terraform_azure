@@ -14,6 +14,12 @@ output "management_subnet_id" {
   value       = azurerm_subnet.management.id
 }
 
+output "database_subnet_id" {
+  description = "Resource ID of the database subnet."
+  value       = azurerm_subnet.database.id
+}
+
+
 output "app_nsg_id" {
   description = "Resource ID of the application network security group."
   value       = azurerm_network_security_group.app.id
