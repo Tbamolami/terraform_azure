@@ -88,3 +88,27 @@ module "container-reg" {
   }
 }
 
+
+module "container_apps" {
+  source = "../../modules/container-apps"
+
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+
+  environment_name  = "cae-finance-dev"
+  container_app_name = "album-api-dev"
+
+  container_image = "${module.container-reg.login_server}/album-api:latest"
+  acr_login_server = module.container-reg.login_server
+  acr_id           = module.container-reg.registry_id
+
+  log_analytics_workspace_id = module.monitoring.workspace_id
+
+  tags = {
+    Environment = "dev"
+    Project     = "azure-hybrid-infrastructure"
+    ManagedBy   = "Terraform"
+  }
+}
+
+
