@@ -27,7 +27,7 @@ variable "administrator_password" {
 
 variable "database_subnet_id" {
   description = "ID of the Private DNS zone."
-  type        = list(string)
+  type        = string
 }
 
 variable "virtual_network_id" {
