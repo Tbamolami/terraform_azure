@@ -61,7 +61,7 @@ module "database" {
 
   server_name            = "tbam-appdb-21343"
   administrator_login    = "umis"
-  administrator_password = var.administrator_password
+  administrator_password = "Theater12.@"
 
   database_subnet_id = module.networking.database_subnet_id
   virtual_network_id = module.networking.vnet_id

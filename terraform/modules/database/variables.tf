@@ -32,7 +32,7 @@ variable "database_subnet_id" {
 
 variable "virtual_network_id" {
   description = "ID of the Private DNS zone."
-  type        = list(string)
+  type        = string
 }
 
 
