@@ -1,0 +1,99 @@
+
+trigger: none
+pr: none
+
+parameters:
+  - name: environment
+    displayName: Environment to destroy
+    type: string
+    default: dev
+    values:
+      - dev
+      - uat
+      - prod
+
+  - name: confirmDestroy
+    displayName: Confirm that you want to destroy resources
+    type: boolean
+    default: false
+
+pool:
+  name: terraform
+
+variables:
+  terraformRoot: '$(Build.SourcesDirectory)/terraform'
+  backendService: 'deploydev-tf'
+
+stages:
+  # Stage 1: Initialize Terraform and create a destroy plan.
+  - stage: TerraformDestroyPlan
+    displayName: Create destroy plan
+    jobs:
+      - job: Plan
+        displayName: Review planned deletions
+        steps:
+          - checkout: self
+
+          - task: TerraformTask@5
+            displayName: Terraform init
+            inputs:
+              provider: azurerm
+              command: init
+              workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+              backendServiceArm: '$(backendService)'
+              backendAzureRmStorageAccountName: 'terraformstate76325'
+              backendAzureRmContainerName: 'tfpipeline'
+              backendAzureRmKey: 'terraform.state'
+
+          - task: TerraformTask@5
+            displayName: Terraform destroy plan
+            inputs:
+              provider: azurerm
+              command: plan
+              workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+              environmentServiceNameAzureRM: '$(backendService)'
+              commandOptions: '-destroy -out=$(Build.ArtifactStagingDirectory)/destroy.tfplan'
+
+          - publish: '$(Build.ArtifactStagingDirectory)/destroy.tfplan'
+            artifact: terraform-destroy-plan
+            displayName: Publish destroy plan
+
+  # Stage 2: Require explicit confirmation and environment approval.
+  - stage: TerraformDestroy
+    displayName: Destroy infrastructure
+    dependsOn: TerraformDestroyPlan
+    condition: and(succeeded(), ${{ eq(parameters.confirmDestroy, true) }})
+
+    jobs:
+      - deployment: DestroyInfrastructure
+        displayName: Apply approved destroy plan
+        environment: 'terraform-destroy-${{ parameters.environment }}'
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+
+                - download: current
+                  artifact: terraform-destroy-plan
+
+                - task: TerraformTask@5
+                  displayName: Terraform init
+                  inputs:
+                    provider: azurerm
+                    command: init
+                    workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+                    backendServiceArm: '$(backendService)'
+                    backendAzureRmStorageAccountName: 'terraformstate76325'
+                    backendAzureRmContainerName: 'tfpipeline'
+                    backendAzureRmKey: 'terraform.state'
+
+                - task: TerraformTask@5
+                  displayName: Apply approved destroy plan
+                  inputs:
+                    provider: azurerm
+                    command: apply
+                    workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+                    environmentServiceNameAzureRM: '$(backendService)'
+                    commandOptions: '$(Pipeline.Workspace)/terraform-destroy-plan/destroy.tfplan'
