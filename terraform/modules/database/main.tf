@@ -42,4 +42,11 @@ resource "azurerm_postgresql_flexible_server" "main" {
   depends_on = [
     azurerm_private_dns_zone_virtual_network_link.postgres
   ]
+
+  lifecycle {
+    ignore_changes = [
+      zone,
+      high_availability[0].standby_availability_zone
+    ]
+  }
 }
