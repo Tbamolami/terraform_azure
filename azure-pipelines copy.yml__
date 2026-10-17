@@ -1,0 +1,55 @@
+
+trigger:
+  branches:
+    include:
+      - main
+
+parameters:
+  - name: environment
+    displayName: Terraform environment
+    type: string
+    default: dev
+    values:
+      - dev
+      - uat
+      - prod
+
+pool:
+  name: terraform
+
+variables:
+  terraformRoot: '$(Build.SourcesDirectory)/terraform'
+
+steps:
+  - checkout: self
+
+
+
+  - task: TerraformTask@5
+    displayName: Terraform init
+    inputs:
+      provider: 'azurerm'
+      command: 'init'
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      backendServiceArm: 'deploydev-tf'
+      backendAzureRmStorageAccountName: 'terraformstate76325'
+      backendAzureRmContainerName: 'tfpipeline'
+      backendAzureRmKey: 'terraform.state'
+
+  - task: TerraformTask@5
+    displayName: Terraform Plan
+    inputs:
+      provider: 'azurerm'
+      command: 'plan'
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      environmentServiceNameAzureRM: 'deploydev-tf'
+  
+  - task: TerraformTask@5
+    displayName: Terraform apply
+    inputs:
+      provider: 'azurerm'
+      command: 'apply'
+      workingDirectory: '$(terraformRoot)/environments/${{ parameters.environment }}'
+      commandOptions: '-auto-approve'
+      environmentServiceNameAzureRM: 'deploydev-tf'
+  # Apply intentionally omitted during initial validation.
